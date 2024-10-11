@@ -25,6 +25,8 @@ return new class extends Migration
             $table->string('telefono');           
             $table->date('fecha');
             $table->time('horario');
+            $table->boolean('cancelada')->default(false);
+            $table->string('folio', 150)->nullable();
             $table->boolean('estatus');
             $table->timestamps();
        });
