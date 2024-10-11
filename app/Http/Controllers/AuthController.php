@@ -9,7 +9,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
-
+    
     public function showLoginForm()
     {
         return view('auth.login');
@@ -19,7 +19,7 @@ class AuthController extends Controller
     {
         return view('menuPrincipal');
     }
-
+ 
     public function login(Request $request)
 {
     $validator = Validator::make($request->all(), [

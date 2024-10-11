@@ -137,6 +137,20 @@
             justify-content: center; /* Centrar verticalmente */
             width: 100%; /* Ajustar al 100% del contenedor */
         }
+        .spinner {
+            display: none; /* Oculto por defecto */
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-top-color: #000;
+            border-radius: 50%;
+            animation: spin 1s ease-in-out infinite;
+            margin: 10px auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
@@ -154,6 +168,7 @@
         @if(session('error'))
             <div id="error-alert" class="alert alert-danger">{{ session('error') }}</div>
         @endif
+        <div id="spinner" class="spinner"></div>
 
         <div class="user-info">
             {{ Auth::user()->role ? (Auth::user()->role->nombre === 'Superadmin' ? 'SUPER ADMINISTRADOR' : (Auth::user()->role->nombre === 'Citas' ? 'USUARIO PARA GENERAR CITAS' : (Auth::user()->role->nombre === 'Administrador' ? 'ADMINISTRADOR' : Auth::user()->role->nombre))) : 'Sin Rol' }}
@@ -272,10 +287,13 @@
         document.addEventListener('DOMContentLoaded', function () {
             var generarPdfUrl = "{{ $generarPdfUrl }}";
             var downloadButton = document.getElementById('downloadPdf');
+            var spinner = document.getElementById('spinner');
 
             // Definir la función de descarga
             function downloadPdf() {
                 console.log("Botón de descarga clickeado"); // Log para verificar si la función se ejecuta una vez
+                // Mostrar el spinner
+                spinner.style.display = 'block';
                 // Deshabilitar el botón para evitar múltiples clics
                 downloadButton.disabled = true;
                 fetch(generarPdfUrl, {
@@ -291,11 +309,15 @@
                     a.click();
                     a.remove();
                     window.URL.revokeObjectURL(url); // Revocar el objeto URL después de usarlo
-                    downloadButton.disabled = false; // Rehabilitar el botón
+                    // Ocultar el spinner y habilitar el botón nuevamente
+                    spinner.style.display = 'none';
+                    downloadButton.disabled = false;
                 })
                 .catch(error => {
                     console.error('Error al descargar el PDF:', error);
-                    downloadButton.disabled = false; // Rehabilitar el botón en caso de error
+                    // Ocultar el spinner y habilitar el botón en caso de error
+                    spinner.style.display = 'none';
+                    downloadButton.disabled = false;
                 });
             }
 
@@ -304,8 +326,8 @@
             downloadButton = document.getElementById('downloadPdf');
             downloadButton.addEventListener('click', downloadPdf);
         });
-
-    </script>
+        
+        </script>
 </body>
 </html>
 @endsection
